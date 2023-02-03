@@ -4,7 +4,7 @@ import torchvision
 import torchvision.transforms as transforms
 import matplotlib.pyplot as plt
 import torch.nn.functional as F
-from PIL import Image
+import time
 
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
@@ -16,11 +16,8 @@ num_epochs = 10
 batch_size = 32
 lr_rate = 0.001
 
-train_dataset = torchvision.datasets.ImageFolder('./train/', transform=transforms.ToTensor())
-test_dataset = torchvision.datasets.ImageFolder('./test/', transform=transforms.ToTensor())
-
-print(train_dataset)
-
+train_dataset = torchvision.datasets.ImageFolder('C:\\Users\\Cauan\\Documents\\algoritimos\\Muffins-dataset\\train\\', transform=transforms.ToTensor())
+test_dataset = torchvision.datasets.ImageFolder('C:\\Users\\Cauan\\Documents\\algoritimos\\Muffins-dataset\\test\\', transform=transforms.ToTensor())
 
 train_loader = torch.utils.data.DataLoader(dataset=train_dataset, batch_size=batch_size, shuffle=True)
 test_loader = torch.utils.data.DataLoader(dataset=test_dataset, batch_size=batch_size, shuffle=False)
@@ -29,30 +26,33 @@ test_loader = torch.utils.data.DataLoader(dataset=test_dataset, batch_size=batch
 class Net(nn.Module):
     def __init__(self):
         super(Net, self).__init__()
-        self.conv1 = nn.Conv2d(3, 32, 3)
+        self.conv1 = nn.Conv2d(3, 32, 5)
         self.pool = nn.MaxPool2d(2, 2)
-        self.conv2 = nn.Conv2d(32, 64, 3)
-        self.fc1 = nn.Linear(64 * 64 * 64, 128)
+        self.conv2 = nn.Conv2d(32, 64, 5)
+        self.fc1 = nn.Linear(64 * 61 * 61, 128)
         self.fc2 = nn.Linear(128, 2)
 
     def forward(self, x):
         x = self.pool(F.relu(self.conv1(x)))
         x = self.pool(F.relu(self.conv2(x)))
-        x = x.view(x.size(0), -1)
+        x = x.view(-1, 64 * 61 * 61)
         x = F.relu(self.fc1(x))
         x = self.fc2(x)
         return x
 
-net = Net()
-net.to(device)
+net = Net().to(device)
 
 criterion = nn.CrossEntropyLoss()
 optimizer = torch.optim.SGD(net.parameters(), lr=0.001, momentum=0.9)
 print("Starting training loop...")
-for epoch in range(100):  # loop over the dataset multiple times
+for epoch in range(num_epochs):  # loop over the dataset multiple times
 
     running_loss = 0.0
     for i, (inputs, labels) in enumerate(train_loader):
+        
+        inputs = inputs.to(device)
+        labels = labels.to(device)
+        
         # zero the parameter gradients
         optimizer.zero_grad()
 
@@ -64,9 +64,9 @@ for epoch in range(100):  # loop over the dataset multiple times
 
         # print statistics
         running_loss += loss.item()
-        if i % 2000 == 1999:    # print every 2000 mini-batches
+        if i % 32 == 0:    # print every 2000 mini-batches
             print('[%d, %5d] loss: %.3f' %
-                  (epoch + 1, i + 1, running_loss / 2000))
+                (epoch + 1, i + 1, running_loss / 32))
             running_loss = 0.0
 
 print('Finished Training')
@@ -78,6 +78,8 @@ with torch.no_grad():
     n_class_correct = [0 for i in range(2)]
     n_class_samples = [0 for i in range(2)]
     for images, labels in test_loader:
+        images = images.to(device)
+        labels = labels.to(device)
         outputs = net(images)
         # max returns (value ,index)
         _, predicted = torch.max(outputs, 1)
@@ -100,7 +102,7 @@ with torch.no_grad():
 
 #save model
 PATH = './muffins_chihuahua.pth'
-torch.save(net.state_dict(), PATH)
+torch.save(net, PATH)
 
 
 
