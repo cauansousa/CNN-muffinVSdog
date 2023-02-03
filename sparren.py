@@ -35,7 +35,6 @@ conv2 = nn.Conv2d(32, 64, 5)
 pool2 = nn.MaxPool2d(2, 2)
 
 imshow(torchvision.utils.make_grid(images))
-
 print("Cru:",images.shape)
 x = conv1(images)
 print("Conv1:",x.shape)
@@ -45,4 +44,5 @@ x = conv2(x)
 print("Conv2:",x.shape)
 x = pool2(x)
 print("Pool2:",x.shape)
+
 

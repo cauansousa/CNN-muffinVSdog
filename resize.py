@@ -1,7 +1,7 @@
 from PIL import Image
 import os, sys
 
-path = "C:\\Users\\Cauan\\Documents\\algoritimos\\Muffins-dataset\\test\\muffin\\"
+path = "C:\\Users\\Cauan\\Documents\\GitHub\\Muffin-Chihuahua-CNN\\foto\\"
 dirs = os.listdir( path )
 
 def resize():

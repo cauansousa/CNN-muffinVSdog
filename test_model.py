@@ -3,8 +3,8 @@ import cv2
 import torch.nn as nn
 import torchvision
 import torchvision.transforms as transforms
-import matplotlib.pyplot as plt
 import torch.nn.functional as F
+from PIL import Image
 
 class Net(nn.Module):
     def __init__(self):
@@ -25,12 +25,29 @@ class Net(nn.Module):
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
-img = torchvision.datasets.ImageNet('C:\\Users\\Cauan\\Documents\\GitHub\\Muffin-Chihuahua-CNN\\foto\\', transform=transforms.ToTensor())
+path = './foto/'
+
+image = 'muffin.jpg'
+
+img = Image.open(path+image)
+
+# Transforme a imagem em um tensor PyTorch
+transform = transforms.Compose([
+    transforms.ToTensor()
+])
+
+img_tensor = transform(img)
+
+img_tensor = img_tensor.unsqueeze(0).to(device)
 
 
 model = torch.load('muffins_chihuahua.pth')
 model.eval()
 
-out = model(img)
-print(out)
+prd = model(img_tensor)
+_, predicted = torch.max(prd.data, 1)
 
+output = "Muffin" if predicted == 1 else "Chihuahua"
+
+print(output)
+print(predicted)
