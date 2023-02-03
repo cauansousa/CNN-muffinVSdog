@@ -4,7 +4,8 @@ import torchvision
 import torchvision.transforms as transforms
 import matplotlib.pyplot as plt
 import torch.nn.functional as F
-import time
+
+# imagem deve ter 256x256
 
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
@@ -103,7 +104,3 @@ with torch.no_grad():
 #save model
 PATH = './muffins_chihuahua.pth'
 torch.save(net, PATH)
-
-
-
-
