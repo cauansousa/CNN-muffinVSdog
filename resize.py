@@ -1,5 +1,5 @@
 from PIL import Image
-import os, sys
+import os
 
 path = "C:\\Users\\Cauan\\Documents\\GitHub\\Muffin-Chihuahua-CNN\\foto\\"
 dirs = os.listdir( path )

@@ -1,7 +1,5 @@
 import torch
-import cv2
 import torch.nn as nn
-import torchvision
 import torchvision.transforms as transforms
 import torch.nn.functional as F
 from PIL import Image
