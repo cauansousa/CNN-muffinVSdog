@@ -16,8 +16,10 @@ num_epochs = 10
 batch_size = 32
 lr_rate = 0.001
 
-train_dataset = torchvision.datasets.ImageFolder('C:\\Users\\Cauan\\Documents\\algoritimos\\Muffins-dataset\\train\\', transform=transforms.ToTensor())
-test_dataset = torchvision.datasets.ImageFolder('C:\\Users\\Cauan\\Documents\\algoritimos\\Muffins-dataset\\test\\', transform=transforms.ToTensor())
+PATH = 'C:\\Users\\cauan\\Dropbox\\PC (2)\\Documents\\CES\\Dataset'
+
+train_dataset = torchvision.datasets.ImageFolder(PATH+'\\train\\', transform=transforms.ToTensor())
+test_dataset = torchvision.datasets.ImageFolder(PATH+'\\test\\', transform=transforms.ToTensor())
 
 train_loader = torch.utils.data.DataLoader(dataset=train_dataset, batch_size=batch_size, shuffle=True)
 test_loader = torch.utils.data.DataLoader(dataset=test_dataset, batch_size=batch_size, shuffle=False)
@@ -58,6 +60,7 @@ for epoch in range(num_epochs):  # loop over the dataset multiple times
 
         # forward + backward + optimize
         outputs = net(inputs)
+        print(outputs)
         loss = criterion(outputs, labels)
         loss.backward()
         optimizer.step()
