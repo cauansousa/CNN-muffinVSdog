@@ -27,6 +27,7 @@ device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 path = './foto/'
 image = 'mask.jpg'
 img = Image.open(path+image)
+img = img.resize((256,256), Image.ANTIALIAS)
 
 transform = transforms.Compose([
     transforms.ToTensor()
